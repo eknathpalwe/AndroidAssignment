@@ -13,7 +13,9 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.androidassignment.R
+import com.androidassignment.Utils
 import com.androidassignment.model.Facts
+import com.androidassignment.model.local.FactsLocalRepository
 import com.androidassignment.model.remote.FactsRepository
 import com.androidassignment.viewmodel.FactsViewModel
 import com.androidassignment.viewmodel.ViewModelFactory
@@ -46,7 +48,7 @@ class FactsListFragment : Fragment() {
         buttonRefresh = view.findViewById(R.id.button_refresh)
         emptyTextView = view.findViewById(R.id.text_view_empty)
         buttonRefresh.setOnClickListener {
-            viewModel.loadFacts()
+            viewModel.loadFacts(Utils.isOnline(activity!!))
         }
 
     }
@@ -67,8 +69,12 @@ class FactsListFragment : Fragment() {
      * initialize view model and observer
      */
     private fun setupViewModel() {
-        viewModel = ViewModelProviders.of(this@FactsListFragment, ViewModelFactory(FactsRepository()))
-            .get(FactsViewModel::class.java)
+        viewModel =
+            ViewModelProviders.of(
+                this@FactsListFragment,
+                ViewModelFactory(FactsRepository(), FactsLocalRepository(), Utils.isOnline(activity!!))
+            )
+                .get(FactsViewModel::class.java)
         viewModel.factsList.observe(this, renderFactsList)
 
         viewModel.isViewLoading.observe(this, isViewLoadingObserver)

@@ -8,7 +8,12 @@ import com.androidassignment.model.Facts
 import com.androidassignment.model.FactsDataSource
 import com.androidassignment.model.FactsResponse
 
-class FactsViewModel(private val repository: FactsDataSource) : ViewModel() {
+class FactsViewModel(
+    private val repository: FactsDataSource,
+    private val localRepository: FactsDataSource,
+    private val isOnline: Boolean
+) :
+    ViewModel() {
     val _factsList = MutableLiveData<List<Facts>>().apply { value = emptyList() }
     val factsList: LiveData<List<Facts>> = _factsList
 
@@ -23,17 +28,10 @@ class FactsViewModel(private val repository: FactsDataSource) : ViewModel() {
 
     private val _onMessageError = MutableLiveData<Any>()
     val onMessageError: LiveData<Any> = _onMessageError
+    var operationCallback: OperationCallback<FactsResponse>? = null
 
     init {
-        loadFacts()
-    }
-
-    /**
-     * load list of facts
-     */
-    fun loadFacts() {
-        _isViewLoading.postValue(true)
-        repository.getFactsList(object : OperationCallback<FactsResponse> {
+        operationCallback = object : OperationCallback<FactsResponse> {
             override fun onSuccess(obj: FactsResponse?) {
                 _isViewLoading.postValue(false)
                 obj?.rows?.let {
@@ -42,6 +40,7 @@ class FactsViewModel(private val repository: FactsDataSource) : ViewModel() {
                     } else {
                         _factsList.postValue(
                             it.filter { facts -> (facts.title != null || facts.imageHref != null || facts.description != null) })
+
                         _title.postValue(obj.title)
                     }
                 }
@@ -52,6 +51,21 @@ class FactsViewModel(private val repository: FactsDataSource) : ViewModel() {
                 _isViewLoading.postValue(false)
                 _onMessageError.postValue(obj)
             }
-        })
+        }
+        loadFacts(isOnline)
     }
+
+    /**
+     * load list of facts
+     */
+    fun loadFacts(isOnline: Boolean) {
+        _isViewLoading.postValue(true)
+        if (isOnline) {
+            repository.getFactsList(operationCallback)
+        } else {
+            localRepository.getFactsList(operationCallback)
+        }
+
+    }
+
 }

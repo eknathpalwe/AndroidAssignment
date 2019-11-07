@@ -55,7 +55,7 @@ class FactsViewModelUnitTest {
         MockitoAnnotations.initMocks(this)
         `when`<Context>(context.applicationContext).thenReturn(context)
 
-        viewModel = FactsViewModel(repository)
+        viewModel = FactsViewModel(context, repository, repository)
 
         mockData()
         setupObservers()
@@ -94,7 +94,6 @@ class FactsViewModelUnitTest {
     @Test
     fun factsFailRepositoryAndViewModel() {
         with(viewModel) {
-            //     loadFacts()
             isViewLoading.observeForever(isViewLoadingObserver)
             onMessageError.observeForever(onMessageErrorObserver)
         }
