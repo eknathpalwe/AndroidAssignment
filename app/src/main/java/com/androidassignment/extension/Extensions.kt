@@ -13,7 +13,7 @@ fun ImageView.loadImage(url: String) {
     Glide.with(context).load(url)
         .thumbnail(1.0f)
         .placeholder(R.mipmap.ic_launcher)
-        .error(R.mipmap.ic_launcher)
+        .error(R.drawable.ic_error_img)
         .diskCacheStrategy(DiskCacheStrategy.ALL)
         .into(this)
 }

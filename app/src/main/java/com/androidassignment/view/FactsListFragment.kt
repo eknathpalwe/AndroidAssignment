@@ -1,7 +1,6 @@
 package com.androidassignment.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.androidassignment.R
@@ -88,20 +86,25 @@ class FactsListFragment : Fragment() {
 
     //observers
     private val renderFactsList = Observer<List<Facts>> {
+        emptyTextView.visibility = View.GONE
+        factsRecyclerView.visibility = View.VISIBLE
         adapter.update(it)
     }
 
     private val isViewLoadingObserver = Observer<Boolean> {
         progressLoading.visibility = if (it) View.VISIBLE else View.GONE
+        emptyTextView.visibility = if (it) View.GONE else View.VISIBLE
     }
 
     private val onMessageErrorObserver = Observer<Any> {
         emptyTextView.visibility = View.VISIBLE
+        factsRecyclerView.visibility = View.GONE
         emptyTextView.text = it.toString()
     }
 
     private val emptyListObserver = Observer<Boolean> {
         emptyTextView.visibility = if (it) View.VISIBLE else View.GONE
+        factsRecyclerView.visibility = if (it) View.GONE else View.VISIBLE
         emptyTextView.text = getString(R.string.empty_msg)
 
     }
