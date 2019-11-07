@@ -11,7 +11,7 @@ import com.androidassignment.model.FactsResponse
 class FactsViewModel(
     private val repository: FactsDataSource,
     private val localRepository: FactsDataSource,
-    private val isOnline: Boolean
+    private val isOnline: Boolean = true
 ) :
     ViewModel() {
     val _factsList = MutableLiveData<List<Facts>>().apply { value = emptyList() }

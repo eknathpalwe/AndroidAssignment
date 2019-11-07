@@ -55,7 +55,7 @@ class FactsViewModelUnitTest {
         MockitoAnnotations.initMocks(this)
         `when`<Context>(context.applicationContext).thenReturn(context)
 
-        viewModel = FactsViewModel(context, repository, repository)
+        viewModel = FactsViewModel(repository, repository)
 
         mockData()
         setupObservers()
