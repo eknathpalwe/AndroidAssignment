@@ -9,10 +9,10 @@ class FactsLocalRepository : FactsDataSource {
     override fun getFactsList(operationCallback: OperationCallback<FactsResponse>?) {
 
         val mockFactsResponse = FactsResponse(
-            "About Canada offline",
+            "About Canada",
             listOf(
                 Facts(
-                    "Beavers 1",
+                    "Beavers",
                     "Beavers are second only to humans in their ability to manipulate and change their environment. They can measure up to 1.3 metres long. A group of beavers is called a colony",
                     "http://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/American_Beaver.jpg/220px-American_Beaver.jpg"
                 ), Facts(

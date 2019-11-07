@@ -1,9 +1,11 @@
 package com.androidassignment.model.remote
 
+import android.util.Log
 import com.androidassignment.data.ApiClient
 import com.androidassignment.data.OperationCallback
 import com.androidassignment.model.FactsDataSource
 import com.androidassignment.model.FactsResponse
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,6 +24,7 @@ class FactsRepository : FactsDataSource {
                 response.body()?.let {
                     if (response.isSuccessful) {
                         operationCallback?.onSuccess(it)
+                        Log.v("aaaaaaaaaaa", Gson().toJson(it).toString())
                     } else {
                         operationCallback?.onError(response.errorBody())
                     }

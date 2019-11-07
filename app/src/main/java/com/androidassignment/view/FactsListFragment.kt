@@ -99,7 +99,6 @@ class FactsListFragment : Fragment() {
 
     private val isViewLoadingObserver = Observer<Boolean> {
         progressLoading.visibility = if (it) View.VISIBLE else View.GONE
-        emptyTextView.visibility = if (it) View.GONE else View.VISIBLE
     }
 
     private val onMessageErrorObserver = Observer<Any> {
