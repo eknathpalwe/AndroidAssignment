@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AndroidAssignment</string>
+    <string name="refresh">Refresh</string>
+    <string name="empty_msg">No data available</string>
 </resources>
