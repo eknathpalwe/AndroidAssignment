@@ -19,14 +19,15 @@ import com.androidassignment.model.local.FactsLocalRepository
 import com.androidassignment.model.remote.FactsRepository
 import com.androidassignment.viewmodel.FactsViewModel
 import com.androidassignment.viewmodel.ViewModelFactory
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+
 
 class FactsListFragment : Fragment() {
-    lateinit var viewModel: FactsViewModel
-    lateinit var adapter: FactsListAdapter
-    lateinit var factsRecyclerView: RecyclerView
-    lateinit var progressLoading: ProgressBar
-    lateinit var emptyTextView: TextView
-    lateinit var buttonRefresh: Button
+    private lateinit var viewModel: FactsViewModel
+    private lateinit var adapter: FactsListAdapter
+    private lateinit var factsRecyclerView: RecyclerView
+    private lateinit var emptyTextView: TextView
+    private lateinit var swipeContainer: SwipeRefreshLayout
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(
@@ -34,6 +35,7 @@ class FactsListFragment : Fragment() {
             , false
         )
         intiView(view)
+        setupSwipeContainer()
         setupViewModel()
         setupRecyclerView()
         return view
@@ -44,17 +46,14 @@ class FactsListFragment : Fragment() {
      */
     private fun intiView(view: View) {
         factsRecyclerView = view.findViewById(R.id.facts_recycler_view)
-        progressLoading = view.findViewById(R.id.progress_loading)
-        buttonRefresh = view.findViewById(R.id.button_refresh)
+        swipeContainer = view.findViewById(R.id.swipe_container)
         emptyTextView = view.findViewById(R.id.text_view_empty)
-        buttonRefresh.setOnClickListener {
-            viewModel.loadFacts(Utils.isOnline(activity!!))
-        }
+
 
     }
 
     /**
-     * initialize recycler view
+     * Initialize recycler view
      */
     private fun setupRecyclerView() {
         factsRecyclerView.setHasFixedSize(true);
@@ -66,13 +65,28 @@ class FactsListFragment : Fragment() {
     }
 
     /**
+     * Configure swipe container
+     */
+    private fun setupSwipeContainer() {
+        swipeContainer.setColorSchemeResources(
+            android.R.color.holo_blue_bright,
+            android.R.color.holo_green_light,
+            android.R.color.holo_orange_light,
+            android.R.color.holo_red_light
+        );
+        swipeContainer.setOnRefreshListener {
+            viewModel.loadFacts(Utils.isOnline(activity))
+        }
+    }
+
+    /**
      * initialize view model and observer
      */
     private fun setupViewModel() {
         viewModel =
             ViewModelProviders.of(
                 this@FactsListFragment,
-                ViewModelFactory(FactsRepository(), FactsLocalRepository(), Utils.isOnline(activity!!))
+                ViewModelFactory(FactsRepository(), FactsLocalRepository(), Utils.isOnline(activity))
             )
                 .get(FactsViewModel::class.java)
         viewModel.factsList.observe(this, renderFactsList)
@@ -98,7 +112,7 @@ class FactsListFragment : Fragment() {
     }
 
     private val isViewLoadingObserver = Observer<Boolean> {
-        progressLoading.visibility = if (it) View.VISIBLE else View.GONE
+        swipeContainer.isRefreshing = it
     }
 
     private val onMessageErrorObserver = Observer<Any> {
