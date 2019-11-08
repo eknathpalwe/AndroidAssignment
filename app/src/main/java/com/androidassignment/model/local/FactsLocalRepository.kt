@@ -1,9 +1,11 @@
 package com.androidassignment.model.local
 
+import com.androidassignment.App
 import com.androidassignment.data.OperationCallback
 import com.androidassignment.model.Facts
 import com.androidassignment.model.FactsDataSource
 import com.androidassignment.model.FactsResponse
+import com.google.gson.Gson
 
 class FactsLocalRepository : FactsDataSource {
     override fun getFactsList(operationCallback: OperationCallback<FactsResponse>?) {
@@ -50,6 +52,11 @@ class FactsLocalRepository : FactsDataSource {
                 )
             )
         )
-        operationCallback?.onSuccess(mockFactsResponse)
+
+        val responseData = App.prefs?.responseData
+        responseData?.let {
+            operationCallback?.onSuccess(Gson().fromJson(responseData, FactsResponse::class.java))
+        } ?: FactsResponse("", listOf())
+
     }
 }

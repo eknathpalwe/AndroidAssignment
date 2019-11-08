@@ -1,6 +1,7 @@
 package com.androidassignment.model.remote
 
 import android.util.Log
+import com.androidassignment.App
 import com.androidassignment.data.ApiClient
 import com.androidassignment.data.OperationCallback
 import com.androidassignment.model.FactsDataSource
@@ -23,8 +24,8 @@ class FactsRepository : FactsDataSource {
             override fun onResponse(call: Call<FactsResponse>, response: Response<FactsResponse>) {
                 response.body()?.let {
                     if (response.isSuccessful) {
+                        App.prefs?.responseData = Gson().toJson(it).toString();
                         operationCallback?.onSuccess(it)
-                        Log.v("aaaaaaaaaaa", Gson().toJson(it).toString())
                     } else {
                         operationCallback?.onError(response.errorBody())
                     }
