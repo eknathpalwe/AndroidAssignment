@@ -14,6 +14,9 @@ import retrofit2.Response
 class FactsRepository : FactsDataSource {
     private var call: Call<FactsResponse>? = null
 
+    /**
+     * Get list of facts from API
+     */
     override fun getFactsList(operationCallback: OperationCallback<FactsResponse>?) {
         call = ApiClient.build()?.getFactsList()
         call?.enqueue(object : Callback<FactsResponse> {

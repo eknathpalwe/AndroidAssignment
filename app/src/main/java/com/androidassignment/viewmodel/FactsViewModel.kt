@@ -57,6 +57,8 @@ class FactsViewModel(
 
     /**
      * load list of facts
+     * @param isOnline - true if Load data from API
+     * false if Load data from local cache
      */
     fun loadFacts(isOnline: Boolean) {
         _isViewLoading.postValue(true)
